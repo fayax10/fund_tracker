@@ -13,6 +13,31 @@ TARGET_AMOUNT = 54400
 def db():
     return sqlite3.connect(DB)
 
+def init_db():
+    conn = db()
+    cur = conn.cursor()
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS students (
+        coupon_id TEXT PRIMARY KEY,
+        student_name TEXT,
+        class_name TEXT
+    )
+    """)
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS collections (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        coupon_id TEXT,
+        amount INTEGER,
+        timestamp TEXT
+    )
+    """)
+
+    conn.commit()
+    conn.close()
+
+init_db()
 
 # ---------- ROUTES ----------
 @app.route("/")
