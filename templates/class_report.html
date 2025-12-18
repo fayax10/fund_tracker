@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class-wise Report</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="header">
+  <img src="{{ url_for('static', filename='alonza_logo.png') }}"
+       class="logo-right"
+       alt="ALONZA">
+</div>
+
+<h1 style="margin-top:20px;">Class-wise Report</h1>
+
+{% for class_name, students in report.items() %}
+  <div class="card">
+    <h2>{{ class_name }}</h2>
+
+    <table>
+      <tr>
+        <th>Student</th>
+        <th>Total (₹)</th>
+      </tr>
+
+      {% for s in students %}
+      <tr>
+        <td>{{ s[0] }}</td>
+        <td>₹{{ s[1] }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+{% endfor %}
+
+<a href="/" class="btn">← Back to Dashboard</a>
+
+<div class="safe-area-fix"></div>
+
+</body>
+</html>

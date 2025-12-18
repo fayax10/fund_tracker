@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALONZA 2025 – Fund Tracker</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+  <!-- TOP LOGO HEADER -->
+  <div class="top-bar">
+  <div class="header">
+    <span class="header-title">ALONZA 2025</span>
+    <img src="{{ url_for('static', filename='alonza_logo.png') }}"
+         class="logo-right"
+         alt="ALONZA">
+  </div>
+</div>
+
+  <!-- TOTAL -->
+  <div class="card">
+    <h2>Total Collected</h2>
+    <h1 id="total">₹0</h1>
+  </div>
+
+  <!-- TOP CONTRIBUTOR -->
+  <div class="card">
+    <h2 id="topper">Top Contributor: —</h2>
+  </div>
+
+  <!-- CLASS WISE -->
+  <div class="card">
+    <h2>Class-wise Collection</h2>
+    <div id="classes"></div>
+  </div>
+
+  <!-- TARGET -->
+  <div class="card">
+    <h3>Target Progress</h3>
+    <p id="progress-text">₹0 / ₹0</p>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <p id="progress-percent">0%</p>
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <a href="/update" class="btn">Update My Collection</a>
+  <a href="/leaderboard" class="btn">View Leaderboard</a>
+  <a href="/class_report" class="btn">Class-wise Report</a>
+
+  <!-- iOS SAFE AREA FIX -->
+  <div class="safe-area-fix"></div>
+
+  <!-- SCRIPT (ONLY ONE) -->
+  <script>
+    async function loadStats() {
+      const res = await fetch("/stats");
+      const data = await res.json();
+
+      document.getElementById("total").innerText = "₹" + data.total;
+
+      if (data.topper) {
+        document.getElementById("topper").innerText =
+          `🏆 ${data.topper[0]} – ₹${data.topper[1]}`;
+      }
+
+      // Progress bar
+      document.getElementById("progress-text").innerText =
+        `₹${data.total} / ₹${data.target}`;
+
+      document.getElementById("progress-fill").style.width =
+        data.percentage + "%";
+
+      document.getElementById("progress-percent").innerText =
+        data.percentage + "%";
+
+      // Class-wise
+      let html = "";
+      data.classes.forEach(c => {
+        html += `<p>${c[0]} : ₹${c[1]}</p>`;
+      });
+      document.getElementById("classes").innerHTML = html;
+    }
+
+    loadStats();
+    setInterval(loadStats, 5000);
+  </script>
+
+</body>
+</html>

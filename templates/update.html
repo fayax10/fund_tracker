@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<div class="header">
+  <img src="{{ url_for('static', filename='alonza_logo.png') }}"
+       class="logo-right"
+       alt="ALONZA">
+</div>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Collection</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h1>Update My Coupon Collection</h1>
+
+<div class="card">
+
+  <input id="coupon_id" placeholder="Coupon ID (eg: A-01)" required>
+  <input id="student_name" placeholder="Your Name" required>
+
+  <!-- CLASS DROPDOWN -->
+  <select id="class_name">
+    <option value="">Select Class</option>
+    <option value="First Year">First Year</option>
+    <option value="Second Year">Second Year</option>
+    <option value="Third Year">Third Year</option>
+  </select>
+
+  <input id="amount" type="number" placeholder="Amount Collected Now" required>
+
+  <button onclick="submitData()">Submit</button>
+
+  <p id="msg"></p>
+
+</div>
+
+<script>
+function submitData() {
+  const coupon_id = document.getElementById("coupon_id").value;
+  const student_name = document.getElementById("student_name").value;
+  const class_name = document.getElementById("class_name").value;
+  const amount = document.getElementById("amount").value;
+
+  if (!coupon_id || !student_name || !class_name || !amount) {
+    document.getElementById("msg").innerText = "❌ Fill all fields";
+    return;
+  }
+
+  fetch("/submit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      coupon_id: coupon_id,
+      student_name: student_name,
+      class_name: class_name,
+      amount: amount
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById("msg").innerText = "✅ Submitted Successfully";
+  })
+  .catch(error => {
+    document.getElementById("msg").innerText = "❌ Error submitting data";
+    console.error(error);
+  });
+}
+</script>
+
+</body>
+</html>
