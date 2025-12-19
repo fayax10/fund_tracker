@@ -59,7 +59,7 @@ def submit():
     if not all([coupon_id, student_name, class_name]):
         return jsonify({"error": "Missing fields"}), 400
 
-    if amount <= 0 or amount > 500:
+    if amount == 0 or abs(amount) > 500:
         return jsonify({"error": "Invalid amount"}), 400
 
     conn = db()
